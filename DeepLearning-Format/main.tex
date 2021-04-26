@@ -1,0 +1,168 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{algpseudocode}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{ulem}
+\usepackage[hyphens]{url}
+\begin{document}
+
+\title{Gradient Descend\\}
+
+\author{\IEEEauthorblockN{ Luca Brodo}
+\IEEEauthorblockA{\textit{Hochschule Hamm-Lippstadt} \\
+\textit{Deep Learning}\\
+Lippstadt, germany \\
+luca.brodo@stud.hshl.de}
+}
+
+\maketitle
+
+
+\begin{abstract}
+The objective of this paper is to give the reader a thorough overview of the Gradient Descent Algorithm applied the area of Machine Learning. In this paper the different variations of this algorithm will be introduced and explained. In order to offer a complete understanding, both the mathematical foundations and application will be presented. 
+In order to offer a complete view to the reader, the algorithm will be applied both to a linear regression model and to a deep neural network model. 
+\end{abstract}
+
+
+\section{Motivation}
+The main challenge in the area of Machine Learning for both researchers and practitioners is to train the model as efficiently as possible. In the context of Deep Neural Network models the training is based on the back propagation algorithm, which propagates the errors from the output layer to the front one, updating the variables layer by layer, and it's based on gradient descent optimization algorithms.A lot of different algorithms have been introduced to better improve the performances of the models,e.g., Newton’s method, etc... These algorithms, however, are based on high-order derivatives and in practice tend to be slower than the first-derivative-based Gradient Descent and its variants. 
+In the context of linear regression based models, performances are also important, and an optimized Gradient Descent algorithms may result vital when the data set is relatively big. Usually, they are often used as black-box optimizers by state-of-the-art Deep Learning library, e.g. lasagne, caffe, and keras documentation, but an ad-hoc implementation for a specific dataset may be more efficient. To achieve so, a full understanding of the algorithm is necessary. 
+
+\section{Introduction}
+
+The aim of this paper is to provide a thorough understanding of the Gradient Descent algorithm for optimization in the area of Machine Learning. In this section, a first introduction to the algorithm will be provided. Subsequently, in section 2, the mathematical foundations of the algorithm will be layed down. In the next three sections, the three different versions of the algorithm, namely the Batch, Stochastic and Mini-Batch Gradient Descent, are discussed in detail along with a real world application. Finally, the 3 versions are compared and additional strategies which are helpful for optimizing gradient descent are introduced. 
+\\
+As already mentioned, the gradient descent is an algorithm that allows the optimization of various machine learning models. In order to achieve this, the algorithm is based on an iterative process for finding a local minima of a differentiable function. At every iteration, the step in the opposite direction of the gradient\footnote{ The gradient represents in which point the function changes the most}  of the function at the given point is taken. 
+This algorithm is usually attributed to Cauchy, who first suggested it in 1847.
+
+%
+
+\section{Mathematical Foundations}
+
+
+The algorithm moves from the observation that, taken a multi-variable,defined and differentiable in a point \textbf{a} function $F(x)$, it will decrease fastest whenever one goes from \textbf{a}  towards $-$ $\nabla F(x)$  (opposite to the gradient of $F(x)$).
+It follows, then:
+\begin{equation}
+    \mathbf{a_{n}} = \mathbf{a_{n-1}} - \alpha\nabla F(\mathbf{a_{n-1}})\label{eq:original}
+\end{equation}
+
+where $\alpha$ is small enough, so that $F(a_{n-1} \geq a_{n})$.\\\\
+In other words, by subtracting $\alpha\nabla F(\mathbf{a_{n-1}})$ to $\mathbf{a_{n-1}}$, one moves against the gradient, toward the local minima as fast as possible. \\By considering each point $\mathbf{a_{0}},\mathbf{a_{1}},\mathbf{a_{2}},...\mathbf{a_{n},\mathbf{a_{n+1}}}$, such that 
+$\mathbf{a_{n+1}} = \mathbf{a_{n}} - \alpha\nabla F(\mathbf{a_{n}})$, one will obtain the following monotonic sequence:
+\[
+   F(a_{0}) \geq F(a_{1})\geq F(a_{2})\geq F(a_{3})\geq F(a_{4}) \geq ...
+\]
+
+This sequence will converge to the local minima of the function.\cite{Wikipedia}
+\subsection{Real World Example}
+The above described algorithm can be better visualized with a real world example.
+Let's assume a situation in which one finds himself on the top of a mountain and needs to reach the valley. In case the visibility is very low, for example because of extreme fog, one solution can be to walk some steps and to always choose the steepest path. If one keeps going like this, eventually the valley will be reached. This is the main idea of the algorithm. 
+
+
+\section{Machine Learning Application}
+
+When training a model, a so called "Cost function" is used to express the average loss over the data set.Calculating the slope, or gradient, of this function at a given point defines how to change the parameters of the model to make it more accurate. Recalling the previous section, the concept of taking steps opposite to the gradient has been introduced. These steps, in the context of machine learning, are the learning rate. Choosing distant steps will introduce overshooting and imprecision, while using close steps is more precise, but introduces calculation overhead since the gradient is recalculated very frequently, thus making the learning process slower. \cite{MLGl}\\
+Recalling the real world example in the previous section, let's imagine that the person on the mountain had with them a tool capable of measuring the steepness of the mountain at a specific point. by walking too much in one direction, it may be the case that that the value measured at the destination point is bigger that the one measured at the starting point. However, if the person uses the tool too many times, the process will be slowed down by the continuous calculations of the tool. 
+
+
+\section{Batch Gradient Descent Application}
+
+
+The first variation of the algorithm is called Batch Gradient Descent Application, or Vanilla gradient descent, and can be thought as the naïve implementation. 
+The idea of this algorithm is to translate the mathematical representation into code. 
+Given a training set $\tau$, the \textit{Batch Gradient Descent algorithm} optimizes the model variables with the following equation:
+\begin{equation}
+    \Theta^{(i)} = \Theta^{(i-1)} -\alpha\nabla\mathscr{L}(\Theta;\tau)\label{BGDA}
+\end{equation}
+where:
+\begin{enumerate}
+  \item $\Theta^{(\tau)}$ denotes the model parameters vector at iteration i
+  \item $\nabla\mathscr{L}(\Theta;\tau)$ denotes the gradient of the loss function $\mathscr{L}(\Theta;\tau)$.The notation $(\Theta;\tau)$ indicates that the parameters $\Theta$ are taken with the whole $\tau$. The loss function for the purpose of this paper will be defined as the Mean Squared Error (MSE) and will take the form of $\mathscr{L}(\Theta)=\mathscr{L}(w,b) = \frac{1}{N}\sum_{i=1}^{n}(y_i - (wx_i+b))^2$.Using this as the cost function allows to control the weight $w$ and the bias $b$ as the parameters for our model. 
+  \item $\alpha$ denotes the  \textit{learning rate} in the gradient descent algorithm, which is usually very small (e.g. $10^{-4}$)
+\end{enumerate}
+
+\begin{algorithm}
+\caption{Vanilla Gradient Descent}\label{euclid}
+\begin{algorithmic}[1]
+\Require{Training set $\tau$, Learning Rate $\alpha$, Mean Squared Error(MSE): $\mathscr{L}(\Theta;\tau)$ }
+\Ensure {Model Parameter $\theta$}
+\For{i in $iterations$}\Comment{The amount of iterations is arbitrary }
+\State Compute the gradient $\nabla\mathscr{L}(\theta;\tau)$
+\State Update Variables $\Theta = \Theta -\alpha\nabla\mathscr{L}(\theta;\tau)$
+\EndFor
+\Return{model variable $\Theta$}\Comment{The vector $\Theta$ contains the update version of $w$ and $b$}
+\end{algorithmic}
+\end{algorithm}
+
+According to the description, using this variation of the algorithm, to update the model variables, the computation of the whole gradient of the loss function at every iteration is needed. This introduces computation overhead by redundancy which makes the training slow and does not allow online training. 
+
+
+\section{Stochastic Gradient Descent Application}
+
+
+To improve efficiency, the \textit{Stochastic Gradient Descent Application} updates the parameters by computing the loss function gradient instances by instances. In other words, the gradient will be computed only once for every instance of our dataset. This means, equation \eqref{BGDA} will become:
+\begin{equation}
+    \Theta^{(i)} = \Theta^{(i-1)} - \alpha\nabla\mathscr{L}(\Theta;(\mathscr{x}_i,\mathscr{y}_i))\label{eq:SGDA}
+\end{equation}
+
+
+\begin{algorithm}
+\caption{Stochastic Gradient Descent Application}\label{SGDAal}
+\begin{algorithmic}[1]
+\Require{Training set $\tau$, Learning Rate $\alpha$, Mean Squared Error(MSE): $\mathscr{L}(\theta;\tau)$}
+\Ensure {Model Parameter $\theta$}
+\For{i in $iterations$}\Comment{The amount of iterations is arbitrary }
+\State Shuffle $\tau$
+\For{each instance $(x_i,y_i)\in \tau$}
+\State Compute the gradient $\nabla\mathscr{L}(\theta;(x_i,y_i))$
+\State Update Variables $\Theta = \Theta -\alpha\nabla\mathscr{L}(\Theta;(x_i,y_i))$
+\EndFor
+\EndFor
+\Return{model variable $\Theta$}\Comment{The vector $\Theta$ contains the update version of $w$ and $b$}
+\end{algorithmic}
+\end{algorithm}
+While this implementation reduces the number of computations, the main draw back is the possibility to overshoot and jump out of the local optimum. However, by selecting a small learning rate $\alpha$ and decreasing it in the learning process, the \textit{Stochastic Gradient Descent Application} can almost certainly converge to the local minima. \cite{JZ2019}
+
+
+\section{Mini-Batch Gradient Descent Application}
+
+
+To balance between the \textit{Vanilla Gradient Descent Application} and the  \textit{Stochastic Gradient Descent Application} an approach which lies in between the two can be taken. Instead of taken the whole dataset to compute the gradient, we can divided it in sub-sets called Mini Batch. This approach is named \textit{Mini-Batch Gradient Descent}. 
+Formally, let $\beta \subset \tau$, we can rewrite \eqref{BGDA} as:
+\begin{equation}
+    \Theta^{(i)} = \Theta^{(i-1)} - \alpha\nabla\mathscr{L}(\Theta;\beta )\label{eq:MBGDA}
+\end{equation}
+
+\begin{algorithm}
+\caption{Mini-Batch Gradient Descent Application}\label{MBGDA}
+\begin{algorithmic}[1]
+\Require{Training set $\tau$, Learning Rate $\alpha$, Mean Squared Error(MSE): $\mathscr{L}(\theta;\tau)$, Mini-batch size $b$}
+\Ensure {Model Parameter $\theta$}
+\For{i in $iterations$}
+\State Shuffle $\tau$
+\For{each sub-set $\beta \subset \tau$}
+\State Compute the gradient $\nabla\mathscr{L}(\theta;\beta \subset \tau)$
+\State Update Variables $\Theta = \Theta -\alpha\nabla\mathscr{L}(\Theta;\beta \subset \tau)$
+\EndFor
+\EndFor
+\Return{model variable $\Theta$}
+\end{algorithmic}
+\end{algorithm}
+In the \textit{Mini-batch Gradient Descent Application} the mini batches are usually sampled sequentially from $\tau$, which means that $\tau$ is divided in multiple subsets of size b\footnote{b should not be very large, usually 64,256 or 128}, and these batches are picked one by one to train the model. On the other hand, some versions select the batches randomly and this is referred to as the random mini-batch generation process.Compared with vanilla gradient descent, the mini-batch gradient descent algorithm is much more efficient especially for the training set of an extremely large size. Meanwhile, compared with the stochastic gradient descent, the mini-batch gradient descent algorithm greatly reduces the variance in the model variable updating process and can achieve much more stable convergence.\cite{JZ2019}
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{mybibfile} 
+
+
+\end{document}
