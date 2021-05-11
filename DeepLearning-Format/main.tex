@@ -88,12 +88,12 @@ To solve this problem, a cost function without local minimas should be used. To 
 \cite{Scikit-Learn}.
 
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \includegraphics[scale=0.2]{GradientDescentNormal.jpeg}
     \caption{Gradient descent Normal Behavior\cite{Scikit-Learn}}
     \label{fig:normalbeh}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[htbp]
     \includegraphics[scale=0.2]{GradientDescentPitfalls.png}
     \caption{Gradient descent pitfalls\cite{Scikit-Learn}}
     \label{fig:pitfallsbeh}
@@ -118,7 +118,17 @@ To solve this problem, a cost function without local minimas should be used. To 
    \label{fig:gradientbehavior}
 \end{figure*}
 \subsection{Development Environment}
-An implementation example will be developed for all the versions of the algorithm using Python 3.9 and Scikit Learn 0.24.1. The data set called "Pima.tr" will be used to test the various implementation and it will be split beforehand into a training batch consisting of around 150 elements and a test batch of around 50. 
+An implementation example will be developed for all the versions of the algorithm using Python 3.9 and Scikit Learn 0.24.1. The data set called "Pima.tr" will be used to test the various implementation and it will be split beforehand into a training batch consisting of around 150 elements and a test batch of around 50. Fig n. \ref{fig:data_set} shows the data set. 
+\begin{center}
+    \begin{figure}[ht]
+    \includegraphics[scale=0.3]{Schermata 2021-05-11 alle 15.57.18.png}
+    \caption{Training data set}
+    \label{fig:data_set}
+\end{figure}
+\end{center}
+
+
+
 \section{Batch Gradient Descent Application}
 \subsection{Theory behind the algorithm}
 The first variation of the algorithm is called Batch Gradient Descent Application, or Vanilla gradient descent, and can be thought as the naïve implementation of the algorithm.\cite{JZ2019} 
@@ -239,26 +249,27 @@ To improve efficiency, the \textit{Stochastic Gradient Descent Application} upda
 \Return{model variable $\Theta$}\Comment{The vector $\Theta$ contains the update version of $w$ and $b$}
 \end{algorithmic}
 \end{algorithm}
-\begin{figure}[ht]
+\begin{figure}[htbp]
     \includegraphics[scale=0.5]{Fig4.png}
     \caption{Concept of the stochastic gradient algorithm}
     \label{fig:st_grad}
 \end{figure}
 While this implementation reduces the number of computations, the main draw back is that, due to the random nature of the algorithm, this is much less regular than Batch Gradient Descent: instead of gently decreasing until it reaches the minimum, the cost function will bounce up and down, decreasing only on average. However
-the possibility to overshoot and jump out of the local optimum is high,so\textit{Stochastic Gradient Descent Application} has a better chance of finding the global minimum than \textit{Batch Gradient Descent Application} does. Fig \ref{fig:st_grad} shows the descriped behavior. 
+the possibility to overshoot and jump out of the local optimum is high,so\textit{Stochastic Gradient Descent Application} has a better chance of finding the global minimum than \textit{Batch Gradient Descent Application} does. Fig \ref{fig:st_grad} shows the described behavior. 
 Therefore randomness is good to escape from local optima, but bad because it means that the algorithm can never settle at the minimum. One solution to this dilemma is to gradually reduce the learning rate. The steps start out large (which helps make quick progress and escape local minima), then get smaller and smaller, allowing the algorithm to settle at the global minimum. This process is akin to simulated annealing, an algorithm inspired from the process of annealing in metallurgy where molten metal is slowly cooled down. The function that determines the learning rate at each iteration is called the learning schedule. If the learning rate is reduced too quickly, you may get stuck in a local minimum, or even end up frozen halfway to the minimum. If the learning rate is reduced too slowly, you may jump around the minimum for a long time and end up with a suboptimal solution if you halt training too early. \cite{Scikit-Learn}.
 
 
 \subsection{Application}
-The application of this variation of the algorithm uses the same dataset as the one before with surprising the results. 
-
-
-\begin{figure}[ht]
+The application of this variation of the algorithm uses the same data-set as the one before with surprising the results. 
+According to  \cite{Scikit-Learn},  the two variations should give more or less the same result. This is probably the case when the data-set does not contain a lot of noise and it presents a pretty linear behavior. However, as shown in fig n. \ref{fig:data_set}, the data set used for this example contains a certain degree of noise that can influence the outcome of the algorithm. 
+In addition, the stochastic gradient works better with non-convex, smooth error functions. The function used in this paper, as explained previously, is the MSE, which is a convex function, which means that if you pick any two points on the curve, the line segment joining them never crosses the curve. This implies that there are no local minima, just one global minimum. \cite{Scikit-Learn}
+\begin{figure}[htbp]
     \includegraphics[scale=0.35]{Schermata 2021-05-01 alle 18.53.24.png}
     \caption{Result of the implementation of the stochastic gradient descent}
-    \label{fig:va_gr_ben_eta_big}
+    \label{fig:stoc_res}
 \end{figure}
 
+The time needed by this version to come up with a behavioral model, however, is significantly less than the one needed by the vanilla gradient descent. 
 
 
 
@@ -289,10 +300,30 @@ Formally, let $\beta \subset \tau$, we can rewrite \eqref{BGDA} as:
 \end{algorithm}
 In the \textit{Mini-batch Gradient Descent Application} the mini batches are usually sampled sequentially from $\tau$, which means that $\tau$ is divided in multiple subsets of size b\footnote{b should not be very large, usually 64,256 or 128}, and these batches are picked one by one to train the model. On the other hand, some versions select the batches randomly and this is referred to as the random mini-batch generation process.Compared with vanilla gradient descent, the mini-batch gradient descent algorithm is much more efficient especially for the training set of an extremely large size. Meanwhile, compared with the stochastic gradient descent, the mini-batch gradient descent algorithm greatly reduces the variance in the model variable updating process and can achieve much more stable convergence.\cite{JZ2019}
 
+%\subsection{Application}
+\begin{center}
+\begin{figure*}[ht]
+    \includegraphics[width = 11 cm]{Schermata 2021-05-11 alle 16.25.08.png}
+    \caption{Result of the mini batch gradient descent algorithm}
+    \label{fig:mini_res}
+\end{figure*}
+\end{center}
 
 
+\begin{center}
+\begin{figure*}[ht]
+    \includegraphics[width = 12cm]{Schermata 2021-05-11 alle 16.26.13.png}
+    \caption{Comparison between the 3 variations}
+    \label{fig:comparison}
+\end{figure*}
+\end{center}
+\section{Conclusion}
+\cite{Scikit-Learn} presents a very well comparison between the three variations and it can be seen in Fig n.\ref{fig:comparison}.
+The Vanilla Gradient descent, or "Batch", converges smoothly towards the minimum value of the function, while the stochastic and mini-batch ones tend to over-shoot and never to settle into a proper minimum. This is due to their more random nature. These two last variations, however,  tend to reach the zone of the minimum faster, i.e. with less iterations and less computational overhead. 
+This is the trade-off that needs to be considered when choosing one of the variations. 
 
 \newpage
+
 \section{Declaration of Originality}
 I hereby confirm that I have written the accompanying paper by myself, without contributions from any sources other than those cited in the text and acknowledgements.
 This applies also to all graphics, drawings, maps and images included in the paper.
