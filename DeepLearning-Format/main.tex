@@ -299,6 +299,10 @@ Formally, let $\beta \subset \tau$, we can rewrite \eqref{BGDA} as:
 \end{algorithmic}
 \end{algorithm}
 In the \textit{Mini-batch Gradient Descent Application} the mini batches are usually sampled sequentially from $\tau$, which means that $\tau$ is divided in multiple subsets of size b\footnote{b should not be very large, usually 64,256 or 128}, and these batches are picked one by one to train the model. On the other hand, some versions select the batches randomly and this is referred to as the random mini-batch generation process.Compared with vanilla gradient descent, the mini-batch gradient descent algorithm is much more efficient especially for the training set of an extremely large size. Meanwhile, compared with the stochastic gradient descent, the mini-batch gradient descent algorithm greatly reduces the variance in the model variable updating process and can achieve much more stable convergence.\cite{JZ2019}
+\subsection{Application}
+Fig n.\ref{fig:mini_res} shows the result of the Mini-Batch algorithm. The result matches the one with the stochastic method, however the time of execution is bit slower (around 0.0063 compared to around 0.0005). 
+
+
 
 %\subsection{Application}
 \begin{center}
